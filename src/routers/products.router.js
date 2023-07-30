@@ -39,7 +39,9 @@ router.get('/:pid', async (req, res) => {
 router.post('/', async (req, res) => {
     try {
         const producto = req.body;
-        const respuesta = await productManager.addProduct(producto);
+        await productManager.addProduct(producto);
+
+        //recurso temporal
         res.send('<script>alert("Producto añadido con éxito."); window.location.href = "/";</script>');
     } catch (error) {
         res.status(500).send({ error: error.message });
