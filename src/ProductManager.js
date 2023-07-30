@@ -72,7 +72,7 @@ class ProductManager {
                 const productos = await this.getProducts();
 
                 if (productos.find(p => p.code === newProduct.code)) {
-                    return 'Codigo existente';
+                    return 'Producto no agregado, codigo existente';
                 } else {
 
                     let id;
