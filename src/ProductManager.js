@@ -5,6 +5,9 @@ class ProductManager {
 
     constructor(path) {
         this.path = path;
+        this.arrayPropiedades = ['title', 'description', 
+        'price', 'thumbnail', 'code', 'stock', 'status', 
+        'category'];
     }
 
     async getProducts() {
@@ -19,10 +22,43 @@ class ProductManager {
         } catch (error) {
             return error;
         }
-    }
+    }  
+
+    formateandoProducto (objeto) {
+        let validObject = {};
+
+        for (const propiedad in objeto) {
+            if (this.arrayPropiedades.includes(propiedad)) {
+                validObject[propiedad] = objeto[propiedad];
+            } else {
+                console.log(`Propiedad inválida: ${propiedad}, valor: ${objeto[propiedad]}`);
+            }
+        }
+
+        if(!validObject.hasOwnProperty('status') || typeof validObject.status !== 'boolean'){
+            validObject.status = true;
+        }
+        if(!validObject.hasOwnProperty('thumbnail')){
+            validObject.thumbnail = '';
+        }
+
+        //convertir los valores numericos a numeros
+        validObject.price = parseFloat(validObject.price);
+        validObject.stock = parseFloat(validObject.stock);
+
+        return validObject;
+    };
 
     checkProduct(producto) {
-        if (producto.title && producto.description && producto.price && producto.thumbnail && producto.code && producto.stock) {
+        if (producto.hasOwnProperty('title') && typeof producto.title === 'string' &&
+            producto.hasOwnProperty('description') && typeof producto.description === 'string' &&
+            producto.hasOwnProperty('price') && typeof producto.price === 'number' &&
+            producto.hasOwnProperty('thumbnail') && typeof producto.thumbnail === 'string' &&
+            producto.hasOwnProperty('code') && typeof producto.code === 'string' &&
+            producto.hasOwnProperty('stock') && typeof producto.stock === 'number' &&
+            producto.hasOwnProperty('status') && typeof producto.status === 'boolean' &&
+            producto.hasOwnProperty('category') && typeof producto.category === 'string'
+            ) {
             return true;
         } else {
             return false;
@@ -31,12 +67,14 @@ class ProductManager {
 
     async addProduct(producto) {
         try {
-            if (this.checkProduct(producto)) {
+            const newProduct = this.formateandoProducto(producto);
+            if (this.checkProduct(newProduct)) {
                 const productos = await this.getProducts();
 
-                if (productos.find(p => p.code === producto.code)) {
+                if (productos.find(p => p.code === newProduct.code)) {
                     return 'Codigo existente';
                 } else {
+
                     let id;
                     if (productos.length === 0) {
                         id = 1;
@@ -44,15 +82,16 @@ class ProductManager {
                         id = productos[productos.length - 1].id + 1;
                     }
 
-                    productos.push({ ...producto, id });
+                    productos.push({ ...newProduct, id });
                     const jsonProductos = JSON.stringify(productos);
                     await fs.promises.writeFile(this.path, jsonProductos, 'utf-8');
 
                     return 'Producto agregado correctamente';
                 }
+                
 
             } else {
-                return 'Producto invalido';
+                return newProduct;
             }
 
         } catch (error) {
