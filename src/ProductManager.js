@@ -5,9 +5,8 @@ class ProductManager {
 
     constructor(path) {
         this.path = path;
-        this.arrayPropiedades = ['title', 'description', 
-        'price', 'thumbnail', 'code', 'stock', 'status', 
-        'category'];
+        this.arrayPropiedades = ['title', 'description', 'price', 'thumbnail', 
+                                'code', 'stock', 'status', 'category', 'quantity'];
     }
 
     async getProducts() {
@@ -22,34 +21,33 @@ class ProductManager {
         } catch (error) {
             return error;
         }
-    }  
-
+    } 
+    
     formateandoProducto (objeto) {
         let validObject = {};
 
         for (const propiedad in objeto) {
             if (this.arrayPropiedades.includes(propiedad)) {
                 validObject[propiedad] = objeto[propiedad];
-            } else {
-                console.log(`Propiedad inválida: ${propiedad}, valor: ${objeto[propiedad]}`);
             }
-        }
-
-        if(!validObject.hasOwnProperty('status') || typeof validObject.status !== 'boolean'){
-            validObject.status = true;
-        }
-        if(!validObject.hasOwnProperty('thumbnail')){
-            validObject.thumbnail = '';
-        }
-
-        //convertir los valores numericos a numeros
-        validObject.price = parseFloat(validObject.price);
-        validObject.stock = parseFloat(validObject.stock);
+        }        
 
         return validObject;
     };
 
     checkProduct(producto) {
+        if (producto.hasOwnProperty('price')) {
+            producto.price = parseFloat(producto.price);
+        }
+        if (producto.hasOwnProperty('stock')){
+            producto.stock = parseFloat(producto.stock);
+        }
+        if(!producto.hasOwnProperty('status') || typeof producto.status !== 'boolean'){
+            producto.status = true;
+        }
+        if(!producto.hasOwnProperty('thumbnail')){
+            producto.thumbnail = '';
+        }
         if (producto.hasOwnProperty('title') && typeof producto.title === 'string' &&
             producto.hasOwnProperty('description') && typeof producto.description === 'string' &&
             producto.hasOwnProperty('price') && typeof producto.price === 'number' &&
@@ -87,11 +85,10 @@ class ProductManager {
                     await fs.promises.writeFile(this.path, jsonProductos, 'utf-8');
 
                     return 'Producto agregado correctamente';
-                }
-                
+                }                
 
             } else {
-                return newProduct;
+                return 'Producto no agregado, propiedad o formato inválido';
             }
 
         } catch (error) {
@@ -102,7 +99,7 @@ class ProductManager {
     async getProductById(id) {
         try {
             const productos = await this.getProducts();
-            const producto = productos.find(p => p.id === id);
+            const producto = productos.find(p => p.id === +id);
 
             if (!producto) {
                 return;
@@ -117,20 +114,25 @@ class ProductManager {
 
     async updateProductById(id, producto) {
         try {
-            if (this.checkProduct(producto)) {
-                const productos = await this.getProducts();
-                const indice = productos.findIndex(p => p.id === id);
+            
+            const actualizarProducto = this.formateandoProducto(producto);
+            const productos = await this.getProducts();
+            const indice = productos.findIndex(p => p.id === id);
 
-                if (indice === -1) {
-                    return 'Producto no encontrado';
-                } else {
-                    productos[indice] = { ...producto, id };
-                    const jsonProductos = JSON.stringify(productos);
+            
+            if (indice === -1) {
+                return 'Producto no encontrado por su id';
+            } 
+            if (productos.find(p => p.code === actualizarProducto.code && p.id !== id)) {
+                return 'Producto no actualizado, codigo existente en otro producto';
+            } 
+            
+            productos[indice] = {...productos[indice],...actualizarProducto, id};
+            const jsonProductos = JSON.stringify(productos);
 
-                    await fs.promises.writeFile(this.path, jsonProductos, 'utf-8');
-                    return 'Producto actualizado correctamente';
-                }
-            }
+            await fs.promises.writeFile(this.path, jsonProductos, 'utf-8');
+            return 'Producto actualizado correctamente';
+                            
 
         } catch (error) {
             return error;

@@ -46,5 +46,25 @@ router.post('/', async (req, res) => {
     }
 });
 
+router.put('/:pid', async (req, res) => {
+    try {
+        const pid = +req.params.pid;
+        const producto = req.body;
+        const respuesta = await productManager.updateProductById(pid, producto);
+        res.send(respuesta);
+    } catch (error) {
+        res.status(500).send({ error: error.message });
+    }
+});
+
+router.delete('/:pid', async (req, res) => {
+    try {
+        const pid = +req.params.pid;
+        const respuesta = await productManager.deleteProductById(pid);
+        res.send(respuesta);
+    } catch (error) {
+        res.status(500).send({ error: error.message });
+    }
+});
 
 export default router;

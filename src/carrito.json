@@ -1,0 +1,32 @@
+[
+    {
+        "id": 1,
+        "products": [
+            {
+                "code": "IP12-64GB",
+                "id": 1,
+                "quantity": 2
+            },
+            {
+                "code": "SGS21-128GB",
+                "id": 2,
+                "quantity": 1
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "products": [
+            {
+                "code": "JET75",
+                "id": 15,
+                "quantity": 1
+            },
+            {
+                "code": "BNCH700",
+                "id": 12,
+                "quantity": 2
+            }
+        ]
+    }
+]
