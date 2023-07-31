@@ -1,10 +1,10 @@
 
 import { Router } from "express";
-import CartsManager from '../CartsManager.js';
+import CartsManager from '../managers/CartsManager.js';
 
 const router = Router();
 
-const cartsManager = new CartsManager('./src/carrito.json', './src/productos.json');
+const cartsManager = new CartsManager('./src/JSONs/carrito.json', './src/JSONs/productos.json');
 
 router.get('/', async (req, res) => {
     try {
