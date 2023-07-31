@@ -176,7 +176,7 @@ const prod15 = {
 
 
 
-const productos = new ProductManager('./src/productos.json');
+const productos = new ProductManager('./src/JSONs/productos.json');
 
 async function main() {
     for (let i = 1; i <= 15; i++) {
