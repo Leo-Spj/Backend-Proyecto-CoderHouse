@@ -163,5 +163,27 @@
         "category": "Headphones",
         "status": true,
         "id": 15
+    },
+    {
+        "title": "Huawei XS2",
+        "description": "Huawei XS2 256GB",
+        "price": 2100,
+        "thumbnail": "https://th.bing.com/th/id/OIP.l5DvObf8c1WUIMwGn9kXkQHaHa?pid=ImgDet&rs=1",
+        "code": "HWXS2-256GB",
+        "stock": 3,
+        "category": "Phones",
+        "status": true,
+        "id": 16
+    },
+    {
+        "title": "qweqwe",
+        "description": "qweqwe qwe qwe",
+        "price": 1212,
+        "thumbnail": "https://th.bing.com/th/id/OIP.gmDVLiKOfPPOHOYpX520pQHaFj?pid=ImgDet&rs=1",
+        "code": "qweqwe",
+        "stock": 21,
+        "category": "qweqwe",
+        "status": true,
+        "id": 17
     }
 ]

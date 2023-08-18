@@ -7,7 +7,7 @@ class CartsManager{
     constructor(pathCarritos, pathProductos) {
         this.pathCarritos = pathCarritos;
         this.pathProductos = pathProductos;
-        this.arrayPropiedades = ['id', 'code', 'quantity'];
+        this.arrayPropiedades = ['id', 'quantity'];
 
         this.productManager = new ProductManager(this.pathProductos);
     }
