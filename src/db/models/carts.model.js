@@ -15,4 +15,6 @@ const cartsSchema = new mongoose.Schema({
     },
 });
 
+productsSchema.plugin(mongoosePaginate);
+
 export const cartsModel = mongoose.model('Carts', cartsSchema);
